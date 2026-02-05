@@ -30,7 +30,7 @@ jobs:
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.costaalso}}
-          password: ${{ secrets.2025}}
+          password: ${{ secrets.m45}}
 
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v3
