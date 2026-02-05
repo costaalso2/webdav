@@ -44,7 +44,7 @@ jobs:
         uses: docker/metadata-action@v5
         with:
           images: |
-            ${{ secrets.DOCKER_USERNAME }}/webdav
+            costaalso/webdav
             ghcr.io/${{ github.repository }}
           tags: |
             type=ref,event=branch
