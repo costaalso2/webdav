@@ -29,8 +29,8 @@ jobs:
       - name: Log in to Docker Hub
         uses: docker/login-action@v3
         with:
-          username: ${{ secrets.DOCKER_USERNAMEcostaalso}}
-          password: ${{ secrets.DOCKER_PASSWORD2025}}
+          username: ${{ secrets.costaalso}}
+          password: ${{ secrets.2025}}
 
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v3
