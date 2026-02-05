@@ -44,7 +44,7 @@ jobs:
         uses: docker/metadata-action@v5
         with:
           images: |
-            hacdias/webdav
+            costaalso/webdav
             ghcr.io/hacdias/webdav
           tags: |
             type=ref,event=branch
