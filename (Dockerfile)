@@ -1,8 +1,8 @@
 FROM ghcr.io/costaalso2/webdav:main
 
-# Forzamos a que acepte conexiones de cualquier lado sin error 405
-RUN echo "DavLockDB /var/lib/dav/DavLock" >> /etc/apache2/apache2.conf
-RUN mkdir -p /var/lib/dav/data && chown -R www-data:www-data /var/lib/dav/data
+# Forzamos al servidor a usar el puerto que Render quiere
+ENV PORT=10000
+EXPOSE 10000
 
-# Abrimos la puerta total
-EXPOSE 80
+# Comando para arrancar asegurando el puerto
+CMD ["/usr/sbin/apachectl", "-D", "FOREGROUND", "-p", "10000"]
