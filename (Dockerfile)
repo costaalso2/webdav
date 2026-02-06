@@ -1,8 +1,10 @@
 FROM ghcr.io/costaalso2/webdav:main
 
-# Forzamos al servidor a usar el puerto que Render quiere
-ENV PORT=10000
-EXPOSE 10000
+# Forzamos a que el servidor use la raíz "/" en lugar de "/webdav"
+RUN sed -i 's|Alias /webdav|Alias /|g' /etc/apache2/conf-enabled/webdav.conf
 
-# Comando para arrancar asegurando el puerto
-CMD ["/usr/sbin/apachectl", "-D", "FOREGROUND", "-p", "10000"]
+# Aseguramos que los permisos sean totales para evitar errores 403
+RUN mkdir -p /var/lib/dav/data && chown -R www-data:www-data /var/lib/dav/data && chmod -R 777 /var/lib/dav/data
+
+# Usamos el puerto que ya configuramos en Render
+EXPOSE 6065
