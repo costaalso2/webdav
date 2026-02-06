@@ -1,41 +1,19 @@
-FROM gher.io/costaalso2/webdav: main
+FROM ghcr.io/costaalso2/webdav:main
 
-# Configuramos para que Apache no se confunda con el HTTPS de
+# 1. Corregimos el Alias en una sola línea limpia
+RUN sed -i 's|Alias /webdav /var/lib/dav/data|Alias / /var/lib/dav/data|' /etc/apache2/conf-enabled/webdav.conf
 
-Render
+# 2. Forzamos a Apache a tratar la raíz como un directorio WebDAV (Evita el error 405)
+RUN echo "<Directory /var/lib/dav/data>\n\
+    DAV On\n\
+    AllowOverride None\n\
+    Require all granted\n\
+</Directory>" >> /etc/apache2/apache2.conf
 
+# 3. Cabecera para Render
+RUN echo "RequestHeader set X-Forwarded-Proto 'https'" >> /etc/apache2/apache2.conf
 
-
-RUN echo "RequestHeader set X-Forwarded-Proto 'https'"
-
-
-
-/etc/apache2/apache2.conf
-
-
-
-RUN sed -i 's/Alias /webdav /var/lib/dav/data | Alias
-
-//var/lib/dav/data'
-
-
-
-
-
-/etc/apache2/conf-enabled/webdav.conf
-
-
-
-
-
-#Permisos totales
-
-
-
-
-
-RUN chmod -R 777/var/lib/dav/data
-
-
+# 4. Cambiamos el DUEÑO de los archivos (esto es mejor que el 777 solo)
+RUN chown -R www-data:www-data /var/lib/dav/data && chmod -R 775 /var/lib/dav/data
 
 EXPOSE 6065
