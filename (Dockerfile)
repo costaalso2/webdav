@@ -1,19 +1,11 @@
 FROM ghcr.io/costaalso2/webdav:main
 
-# 1. Corregimos el Alias en una sola línea limpia
-RUN sed -i 's|Alias /webdav /var/lib/dav/data|Alias / /var/lib/dav/data|' /etc/apache2/conf-enabled/webdav.conf
-
-# 2. Forzamos a Apache a tratar la raíz como un directorio WebDAV (Evita el error 405)
-RUN echo "<Directory /var/lib/dav/data>\n\
-    DAV On\n\
+# Forzamos a que acepte los métodos de WebDAV en todo el servidor
+RUN echo "<Directory />\n\
+    Dav On\n\
+    Options Indexes FollowSymLinks\n\
     AllowOverride None\n\
     Require all granted\n\
-</Directory>" >> /etc/apache2/apache2.conf
+</Directory>" > /etc/apache2/conf-available/webdav-fix.conf
 
-# 3. Cabecera para Render
-RUN echo "RequestHeader set X-Forwarded-Proto 'https'" >> /etc/apache2/apache2.conf
-
-# 4. Cambiamos el DUEÑO de los archivos (esto es mejor que el 777 solo)
-RUN chown -R www-data:www-data /var/lib/dav/data && chmod -R 775 /var/lib/dav/data
-
-EXPOSE 6065
+RUN a2enconf webdav-fix
